@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mouse ColorMov Game</title>
+    <style>
+        /* Mets ton CSS ici */
+        body {
+            background-color: #000000dc;
+            color: #f5ebeb;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+        canvas {
+            border: 1px solid #3d3d3d;
+            cursor: crosshair;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="c" width="400" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        canvas.addEventListener('pointermove', (event) => {
+            const bounds = canvas.getBoundingClientRect();
+            mouse.x = (event.clientX - bounds.left) * canvas.width / bounds.width;
+            mouse.y = (event.clientY - bounds.top) * canvas.height / bounds.height;
+        });
+
+        function loop() {
+            const hue = (mouse.x / canvas.width) * 360;
+            ctx.fillStyle = `hsl(${hue}, 70%, 12%)`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, 18, 0, Math.PI * 2);
+            ctx.fillStyle = `hsl(${hue}, 100%, 60%)`;
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.shadowBlur = 24;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html> 
